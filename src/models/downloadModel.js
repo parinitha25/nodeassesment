@@ -1,31 +1,42 @@
 import mongoose from 'mongoose'
- 
+import * as EmailValidator from 'email-validator';
+
 const Schema = mongoose.Schema
  
 const DownloadSchema = new Schema({
     Firstname: {
-        type: String
+        type: String,
+        required:"Firstname required" 
+        
     },
     Lastname: {
-        type: String
+        type: String,
+        required:"Lastname required" 
     },
     Email: {
-        type: String
+        type: String,
+        required:"Email required",
+        match:/^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/,
+        unique: true 
+       
     },
    Password: {
-        type: String
+        type: String,
+        required:"Password required" ,
+        match:/^[a-zA-Z0-9!@#$%^&*]{4,8}$/
     },
     ConfirmPassword: {
-        type: String
+        type: String,
+        required:"ConfirmPassword required" 
     },
-    Createdat: {
-        type: String
+    Created_at: {
+        type: Date,
+        default:new Date
     },
-    updatedat: {
-        type: String
+    Updated_at: {
+        type: Date,
+        default:new Date
     }
 
-})
- 
- 
+}) 
 export default DownloadSchema;

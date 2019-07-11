@@ -2,14 +2,28 @@ import mongoose from 'mongoose'
 import downloadSchema from '../models/downloadModel'
  
 const Download = mongoose.model('Download', downloadSchema)
+
+module.exports.createUser = function(newUser, callback){
+bcrypt.genSalt(10, function(err, salt) {
+bcrypt.hash(newUser.password, salt, function(err, hash) {
+newUser.password = hash;
+newUser.save(callback);
+});
+});
+}
  
 // add new download to the database
 export function addNewDownload(req, res) {
+    if(req.body.Password!=req.body.ConfirmPassword){
+        req.body.ConfirmPassword="";
+     }
     let newDownload = new Download(req.body)
     newDownload.save((error, download) => {
-        if (error) { res.json(error) }
+        console.log("hi")
+        if (error) {res.json(error) }
         res.json(download)
     })
+   
 }
  
 // get all downloads from the database
@@ -20,7 +34,7 @@ export function getDownloads(req, res) {
     })
 }
  
-// get single download based on the id
+// // get single download based on the id
 export function getDownload(req, res) {
     Download.findById(req.params.id, (error, download) => {
         if (error) { res.json(error) }
@@ -28,7 +42,7 @@ export function getDownload(req, res) {
     })
 }
  
-// update the download information based on id
+// // update the download information based on id
 export function updateDownload(req, res) {
     Download.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true }, (error, download) => {
         if (error) { res.json(error) }
@@ -45,57 +59,3 @@ export function deleteDownload(req, res) {
 }
 
 
-// const express = require('express')
-// const app = express()
-
-// app.use(express.json())
-
-// app.post('/downloadModel', (req, res) => {
-//   const Firstname  = req.body.Firstname
-//   const Email = req.body.Email
-
-// })
-// const { check } = require('express-validator/check')
-// app.post('/downloadModel', [
-//     check('Firstname').isLength({ min: 3 }),
-//     check('Email').isEmail(),
- 
-//   ], (req, res) => {
-//     const Firstname  = req.body.Firstname
-//     const Email = req.body.Email
-    
-//   })
-//   check('Firstname')
-//   .isAlpha()
-//   .isLength({ min: 10 })
-
-// //   {
-// //     "errors": [{
-// //       "location": "body",
-// //       "msg": "Invalid value",
-// //       "param": "email"
-// //     }]
-// //   }
-//   check('Firstname')
-//   .isAlpha()
-//   .withMessage('Must be only alphabetical chars')
-//   .isLength({ min: 10 })
-//   .withMessage('Must be at least 10 chars long')
-//   app.post('/downloadModel', [
-//     check('Firstname').isLength({ min: 3 }),
-//     check('Email').custom(Email => {
-//       if (alreadyHaveEmail(Email)) {
-//         throw new Error('Email already registered')
-//       }
-//     }),
-//     // check('age').isNumeric()
-//   ], (req, res) => {
-//     const name  = req.body.name
-//     const email = req.body.email
-//     // const age   = req.body.age
-//   })
-//   check('email').custom(email => {
-//     if (alreadyHaveEmail(email)) {
-//       throw new Error('Email already registered')
-//     }
-//   })
