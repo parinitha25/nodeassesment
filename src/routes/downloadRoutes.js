@@ -1,22 +1,23 @@
-import { addNewDownload, getDownloads, getDownload, updateDownload, deleteDownload } from '../controllers/downloadController'
+import { addNewDownload, getDownloads, getDownload, updateDownload, deleteDownload,login } from '../controllers/downloadController'
 
 const { check, validationResult } = require('express-validator');
 const routes = (app) => {
-
+  // app.route('/login')
+  // .post(login)
   app.route('/sign')
     .get(getDownloads)
     .post(addNewDownload, [
 check('Firstname').isEmpty(),
 check('Lastname').isEmpty(),
 check('Email').isEmpty(),
-check('Password').isLength({ max: 8,min:5 }),
+check('Email').isEmail(),
+check('Password').isEmpty(),
 check('ConfirmPassword').isEmpty()
 ], addNewDownload,(req, res) => {
 const errors = validationResult(req);
 if (!errors.isEmpty()) {
 return res.status(422).json({ errors: errors.array() });
 }
-
 
 
 User.create({
@@ -38,13 +39,6 @@ app.route('/sign/:id')
 .delete(deleteDownload)
 }
 
+
 export default routes
 
-// module.exports.createUser = function(newUser, callback){
-// bcrypt.genSalt(10, function(err, salt) {
-// bcrypt.hash(newUser.password, salt, function(err, hash) {
-// newUser.password = hash;
-// newUser.save(callback);
-// });
-// });
-// }

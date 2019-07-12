@@ -2,10 +2,10 @@ import express from 'express'
 import routes from './src/routes/downloadRoutes'
 import mongoose from 'mongoose'
 import bodyParser from 'body-parser'
-// import downloadModel from './src/models/downloadModel'
+import downloadModel from './src/models/downloadModel'
  
 const app = express()
-const PORT = 3000
+const PORT = 3001
  
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost:27017/todo-app1')

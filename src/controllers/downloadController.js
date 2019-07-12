@@ -1,41 +1,41 @@
 import mongoose from 'mongoose'
 import downloadSchema from '../models/downloadModel'
+const Cryptr = require('cryptr');
+const cryptr = new Cryptr('myTotalySecretKey');
  
 const Download = mongoose.model('Download', downloadSchema)
 
-module.exports.createUser = function(newUser, callback){
-bcrypt.genSalt(10, function(err, salt) {
-bcrypt.hash(newUser.password, salt, function(err, hash) {
-newUser.password = hash;
-newUser.save(callback);
-});
-});
-}
- 
-// add new download to the database
-export function addNewDownload(req, res) {
-    if(req.body.Password!=req.body.ConfirmPassword){
-        req.body.ConfirmPassword="";
-     }
+
+exports.addNewDownload=(req, res)=> {
+    const reg= /^[a-zA-Z0-9!@#$%^&*]{4,8}$/;
+    if(reg.test(req.body.Password))
+    {
+    if(req.body.Password === req.body. ConfirmPassword){
+    req.body.Password = cryptr.encrypt(req.body.Password);
+    req.body. ConfirmPassword = cryptr.encrypt(req.body.ConfirmPassword);
+    }
+    } 
+    else{
+    req.body.Password ="";
+    } 
     let newDownload = new Download(req.body)
     newDownload.save((error, download) => {
-        console.log("hi")
-        if (error) {res.json(error) }
-        res.json(download)
+    if (error) { res.json(error) }
+    res.json("login sucessfully")
     })
-   
-}
+    }
  
 // get all downloads from the database
-export function getDownloads(req, res) {
+exports.getDownloads=(req, res)=> {
     Download.find({}, (error, downloads) => {
         if (error) { res.json(error) }
         res.json(downloads)
+       
     })
 }
  
 // // get single download based on the id
-export function getDownload(req, res) {
+exports. getDownload=(req, res)=> {
     Download.findById(req.params.id, (error, download) => {
         if (error) { res.json(error) }
         res.json(download)
@@ -43,7 +43,7 @@ export function getDownload(req, res) {
 }
  
 // // update the download information based on id
-export function updateDownload(req, res) {
+exports.updateDownload=(req, res)=> {
     Download.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true }, (error, download) => {
         if (error) { res.json(error) }
         res.json(download)
@@ -51,11 +51,10 @@ export function updateDownload(req, res) {
 }
  
 // delete the download from the database.
-export function deleteDownload(req, res) {
+exports.deleteDownload=(req, res)=>{
     Download.remove({ _id: req.params.id }, (error, download) => {
         if (error) { res.json(error) }
         res.json(download)
     })
 }
-
 

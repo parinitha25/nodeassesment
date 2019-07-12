@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import * as EmailValidator from 'email-validator';
+import { stringify } from 'querystring';
 
 const Schema = mongoose.Schema
  
@@ -17,13 +18,11 @@ const DownloadSchema = new Schema({
         type: String,
         required:"Email required",
         match:/^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/,
-        unique: true 
-       
+        unique: true  
     },
    Password: {
         type: String,
-        required:"Password required" ,
-        match:/^[a-zA-Z0-9!@#$%^&*]{4,8}$/
+        required:"Password required"
     },
     ConfirmPassword: {
         type: String,
@@ -37,6 +36,5 @@ const DownloadSchema = new Schema({
         type: Date,
         default:new Date
     }
-
 }) 
 export default DownloadSchema;
